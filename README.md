@@ -6,6 +6,8 @@
 
 ![platform](https://img.shields.io/badge/platform-Android-brightgreen.svg)
 
+>Actualmente, me encuentro testeando su funcionamiento para el lanzamiento.
+
 Evita poner tu usuario y contraseña cada vez que te cambias de red en la UCAB Guayana. 
 Esta app simple te permite guardar tus credenciales cifradas en tu teléfono e ingresarlas en la dirección que elijas con un acceso rápido.
 
