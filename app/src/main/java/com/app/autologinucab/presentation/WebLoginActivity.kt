@@ -71,6 +71,13 @@ class WebLoginActivity : ComponentActivity() {
                       setValue('input[type=password]', pass) ||
                       setValue('input[name*=pass i]', pass) ||
                       setValue('input[id*=pass i]', pass);
+                      
+                      var btn = document.querySelector('input[name="Submit"]');
+                          
+                      if (btn) {
+                          btn.click(); // Esto dispara submitAction() del sitio
+                          return JSON.stringify({ submitted: true});
+                      }
 
                       var form = document.querySelector('form');
                       if (form) {
