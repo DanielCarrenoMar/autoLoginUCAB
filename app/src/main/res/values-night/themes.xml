@@ -1,16 +1,29 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.AutoLoginUCAB" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/black</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+        <!-- Fondo / superficies -->
+        <item name="android:windowBackground">#181818</item>
+        <item name="android:colorBackground">#181818</item>
+        <item name="colorSurface">#181818</item>
+
+        <!-- Texto principal / elementos sobre fondo oscuro -->
+        <item name="colorOnBackground">#F7F7F7</item>
+        <item name="colorOnSurface">#F7F7F7</item>
+        <item name="android:textColorPrimary">#F7F7F7</item>
+
+        <!-- Acentos -->
+        <item name="colorPrimary">#FF5722</item>
+        <item name="colorPrimaryVariant">#673AB7</item>
+        <item name="colorOnPrimary">#F7F7F7</item>
+
+        <item name="colorSecondary">#673AB7</item>
+        <item name="colorSecondaryVariant">#FF5722</item>
+        <item name="colorOnSecondary">#F7F7F7</item>
+
+        <!-- Efectos / interacciones -->
+        <item name="colorControlHighlight">#FFEB3B</item>
+
+        <!-- Status bar -->
+        <item name="android:statusBarColor">#121212</item>
     </style>
 </resources>
