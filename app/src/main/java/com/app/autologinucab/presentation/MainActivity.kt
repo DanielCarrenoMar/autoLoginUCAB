@@ -1,6 +1,7 @@
 package com.app.autologinucab.presentation
 
 import android.os.Bundle
+import android.content.Intent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
 import com.app.autologinucab.data.repository.CredentialsRepositoryImpl
 import com.app.autologinucab.domain.model.Credentials
 import com.app.autologinucab.domain.usecase.ClearCredentialsUseCase
@@ -62,6 +64,8 @@ class MainActivity : ComponentActivity() {
             androidx.compose.runtime.LaunchedEffect(Unit) {
                 refreshSaved()
             }
+
+            val context = LocalContext.current
 
             Scaffold(
                 topBar = { TopAppBar(title = { Text("AutoLoginUCAB") }) }
@@ -109,40 +113,50 @@ class MainActivity : ComponentActivity() {
                         singleLine = true
                     )
 
-                    Button(onClick = {
-                        val existing = getUseCase()
-
-                        val newUrl = url.trim()
-                        val newUser = username.trim()
-                        val newPass = password
-
-                        // Solo reemplazar valores si el input NO está vacío
-                        val finalUrl = newUrl.ifBlank { (existing?.url ?: "") }
-                        val finalUser = newUser.ifBlank { (existing?.username ?: "") }
-                        val finalPass = newPass.ifBlank { (existing?.password ?: "") }
-
-                        // Si no hay nada nuevo escrito, no hacemos escritura innecesaria
-                        if (newUrl.isBlank() && newUser.isBlank() && newPass.isBlank()) {
-                            status = "No hay cambios para guardar (todos los inputs están vacíos)"
-                            return@Button
+                    Row (modifier = Modifier.padding(top = 8.dp), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                        Button(onClick = {
+                            // Lanzar la actividad WebLoginActivity
+                            context.startActivity(Intent(context, WebLoginActivity::class.java))
+                        }) {
+                            Text("Ejecutar")
                         }
 
-                        saveUseCase(
-                            Credentials(
-                                username = finalUser,
-                                password = finalPass,
-                                url = finalUrl
-                            )
-                        )
-                        refreshSaved()
-                        status = "Guardado"
+                        Button(onClick = {
+                            val existing = getUseCase()
 
-                        // Limpiar inputs después de guardar
-                        url = ""
-                        username = ""
-                        password = ""
-                    }) {
-                        Text("Guardar")
+                            val newUrl = url.trim()
+                            val newUser = username.trim()
+                            val newPass = password
+
+                            // Solo reemplazar valores si el input NO está vacío
+                            val finalUrl = newUrl.ifBlank { (existing?.url ?: "") }
+                            val finalUser = newUser.ifBlank { (existing?.username ?: "") }
+                            val finalPass = newPass.ifBlank { (existing?.password ?: "") }
+
+                            // Si no hay nada nuevo escrito, no hacemos escritura innecesaria
+                            if (newUrl.isBlank() && newUser.isBlank() && newPass.isBlank()) {
+                                status = "No hay cambios para guardar (todos los inputs están vacíos)"
+                                return@Button
+                            }
+
+                            saveUseCase(
+                                Credentials(
+                                    username = finalUser,
+                                    password = finalPass,
+                                    url = finalUrl
+                                )
+                            )
+                            refreshSaved()
+                            status = "Guardado"
+
+                            // Limpiar inputs después de guardar
+                            url = ""
+                            username = ""
+                            password = ""
+                        }) {
+                            Text("Guardar")
+                        }
+
                     }
 
                     if (status.isNotBlank()) Text(status)

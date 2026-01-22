@@ -35,6 +35,7 @@
             android:name=".tile.AutoLoginTileService"
             android:exported="true"
             android:label="AutoLogin"
+            android:icon="@drawable/baseline_contactless_24"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
