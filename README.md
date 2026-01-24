@@ -6,13 +6,25 @@
 
 ![platform](https://img.shields.io/badge/platform-Android-brightgreen.svg)
 
->Actualmente, me encuentro testeando su funcionamiento para el lanzamiento.
-
 Evita poner tu usuario y contraseña cada vez que te cambias de red en la UCAB Guayana. 
 Esta app simple te permite guardar tus credenciales cifradas en tu teléfono e ingresarlas en la dirección que elijas con un acceso rápido.
 
+## Cómo instalar ⚙️
+- Accede al [último lanzamiento](https://github.com/DanielCarrenoMar/autoLoginUCAB/releases).
+- Instala el APK (ten en cuenta que, al ser una instalación externa de la Play Store, te pedirá activar una configuración del teléfono. [Info](https://support.google.com/googleplay/thread/216257040/quiero-habilitar-el-acceso-de-fuentes-desconocidas?hl=es))
+- Abre la app instalada.
+
+## Características ⭐
+- Cifrado en el almacenamiento local de contraseña.
+- Configuración del link al que accede.
+- Modo oscuro y claro según la configuración del teléfono.
+
+## Documentación 📖
+Se puede visualizar [aquí](DOCUMENTATION.md).
+
 ### Imagenes
-<div style="display: flex">
-  <img alt="image" src="https://github.com/user-attachments/assets/c2c4a4e6-aa61-4a2f-a486-452bdf531e94" />
-  <img alt="image" src="https://github.com/user-attachments/assets/c1ef6725-cf19-47a0-b3b2-76e50e484215" />
+<div>
+  <img width="270" height="560" alt="dark" src="https://github.com/user-attachments/assets/edfc8756-c221-426f-89c7-e85e8c7f1ab5" />
+  <img width="270" height="560" alt="light" src="https://github.com/user-attachments/assets/78addadd-4c14-4297-829f-efa869af04af" />
+  <img width="500" height="560" alt="mosaic" src="https://github.com/user-attachments/assets/66939c51-e22f-49d4-b827-f25e149a142e" />
 </div>
