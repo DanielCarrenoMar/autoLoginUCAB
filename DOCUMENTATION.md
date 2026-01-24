@@ -7,7 +7,7 @@ El proyecto está desarrollado en **Kotlin** siguiendo los principios de **Clean
 *   **UI Toolkit:** Jetpack Compose Uses Material 3.
 *   **Persistencia:** Repositorio personalizado (`CredentialsRepositoryImpl`).
 
-## Comó ejecutar el proyecto
+## Cómo ejecutar el proyecto
 Esta sección describe los pasos necesarios para configurar el entorno de desarrollo, instalar dependencias y ejecutar la aplicación.
 
 ### Prerequisitos
