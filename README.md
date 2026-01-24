@@ -14,6 +14,12 @@ Esta app simple te permite guardar tus credenciales cifradas en tu teléfono e i
 - Instala el APK (ten en cuenta que, al ser una instalación externa de la Play Store, te pedirá activar una configuración del teléfono. [Info](https://support.google.com/googleplay/thread/216257040/quiero-habilitar-el-acceso-de-fuentes-desconocidas?hl=es))
 - Abre la app instalada.
 
+## Cómo usar 📲
+- Busque el link del formulario al que se desea conectar (para la UCAB es 192.168.0.2).
+- Ingréselo donde dice URL del formulario.
+- Ingrese su usuario y contraseña.
+- Ahora podrá conectarse pulsando "Ejecutar" o añadiendo el Tiled en la sección de arriba en el celular.
+
 ## Características ⭐
 - Cifrado en el almacenamiento local de contraseña.
 - Configuración del link al que accede.
