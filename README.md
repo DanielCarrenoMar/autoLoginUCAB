@@ -9,6 +9,8 @@
 Evita poner tu usuario y contraseña cada vez que te cambias de red en la UCAB Guayana. 
 Esta app simple te permite guardar tus credenciales cifradas en tu teléfono e ingresarlas en la dirección que elijas con un acceso rápido.
 
+> Probado en Android 12+
+
 ## Cómo instalar ⚙️
 - Accede al [último lanzamiento](https://github.com/DanielCarrenoMar/autoLoginUCAB/releases).
 - Instala el APK (ten en cuenta que, al ser una instalación externa de la Play Store, te pedirá activar una configuración del teléfono. [Info](https://support.google.com/googleplay/thread/216257040/quiero-habilitar-el-acceso-de-fuentes-desconocidas?hl=es))
