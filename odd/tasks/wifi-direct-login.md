@@ -82,7 +82,7 @@ Only `Verificar internet` was selected. Do not add result notifications or a res
 
 ## Tasks
 
-- [x] T1 (S1, S2) — inline — Direct form transport, bounded validation policy, durable non-sensitive result, and deterministic unit tests. Commit: pending.
+- [ ] T1 (S1, S2) — inline — Direct form transport, bounded validation policy, durable non-sensitive result, and deterministic unit tests. Commit: ddfa2b5.
 - [ ] T2 (S4) — inline — Persistent allowed-SSID repository with first-use defaults and focused tests. Commit: pending.
 - [ ] T3 (S1, S6, S7, S8) — inline — Shared reliable background execution, Wi-Fi-bound transport, ConnectivityManager Internet validation, quick-settings tile entry point, network callback, SSID gate, and permission declarations. Commit: pending.
 - [ ] T4 (S3, S4, S5, S7, S8) — inline — Redesigned state-driven Compose screens, credential editing, prominent login action, secondary SSID management, permission explanation, and UI/unit tests. Commit: pending.
@@ -141,4 +141,4 @@ L3 — Exploration evidence: WebLoginActivity fills and submits a WebView form u
 
 L4 — 2026-11-12 T1 evidence: initial environment required the installed JDK 21, ignored local.properties for the Android SDK, disk cleanup by the user, and lower Gradle memory. The pre-existing missing tile drawable blocked resource linking and was added. Baseline `:app:testDebugUnitTest` then passed. New tests initially failed to compile for missing production types (RED); after implementation the complete debug JVM suite passed, followed by focused `HttpPortalTransportTest` and `LoginExecutorTest` passing. A JVM crash produced untracked `app/hs_err_pid1336.log`; it was not read or included because full runtime logs are sensitive artifacts. Platform Wi-Fi binding and ConnectivityManager validation moved to T3 because they require network permissions and a concrete Wi-Fi network; S8 remains open.
 
-Next: T2. T1 implementation commit identity will be recorded after the work-unit commit.
+Next: T2. T1 was committed directly on main as ddfa2b5 (`feat(login): add direct portal request and result tracking`).
