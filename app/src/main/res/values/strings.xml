@@ -48,12 +48,10 @@
     <string name="networks_add_error">Escribe un SSID nuevo; no se permiten vacíos ni duplicados.</string>
     <string name="networks_empty">No hay redes permitidas. La automatización no se ejecutará hasta que agregues una.</string>
 
-    <!-- Background service -->
-    <string name="service_channel_name">Automatización de inicio de sesión</string>
-    <string name="service_channel_description">Mantiene la automatización activa al conectarte a tus redes permitidas.</string>
-    <string name="service_notification_title">AutoLogin UCAB</string>
-    <string name="service_notification_idle">Automatización activa</string>
-    <string name="service_notification_running">Conectando…</string>
+    <!-- Notifications -->
+    <string name="notification_title">AutoLogin UCAB</string>
+    <string name="notification_channel_name">Avisos de inicio de sesión</string>
+    <string name="notification_channel_description">Avisa al conectar, al conectarse y cuando hay un error. Puedes deslizar el aviso para quitarlo de la barra.</string>
 
     <!-- Login results -->
     <string name="login_result_running">Conectando…</string>

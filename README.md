@@ -35,16 +35,17 @@ Inicia sesión en el portal Wi-Fi de la UCAB Guayana sin abrir un navegador. La 
 
 - **Ubicación**: leer el SSID de la red actual. Android no entrega el nombre del Wi-Fi sin este permiso.
 - **Wi-Fi / red**: consultar el estado de la conexión y enviar la petición por la red Wi-Fi activa.
-- **Notificaciones**: mostrar el estado de la automatización en curso (Android 13+).
+- **Notificaciones**: mostrar los avisos de conexión (al conectar, al conectarse y cuando hay un error), Android 13+. La app pide este permiso al abrirse; si lo niegas, la automatización sigue funcionando sin avisos visibles.
 - **Inicio**: reactivar la automatización después de reiniciar el teléfono.
-- **Servicio en primer plano**: mantener la automatización activa con la app cerrada.
+- **Red**: el callback de Wi-Fi lo registra el sistema, así que la app ya no necesita el permiso de servicio en primer plano.
 
 ## Notas importantes
 
 - El portal usa **HTTP sin cifrar**. Las credenciales viajan dentro de la red del portal; la app no puede cambiar el transporte que exige el servidor.
 - La URL del portal es fija (`http://192.0.2.1/login.html`) porque el `POST` suministrado está atado a ese destino. El campo de URL anterior se conserva en el almacenamiento cifrado solo por compatibilidad y ya no se usa.
 - Si la lista de redes permitidas queda vacía, la automatización no se ejecuta hasta que agregues una. La app no vuelve a sembrar las redes por defecto después del primer uso.
-- La automatización se apoya en un servicio en primer plano con una notificación permanente de baja prioridad. Si Android no entrega el SSID en segundo plano en tu versión, abre la app una vez y la comprobación se repite.
+- La automatización no usa un servicio en primer plano: el sistema avisa a la app cuando aparece una red Wi-Fi y el intento se ejecuta como job. Si Android no entrega el SSID en segundo plano en tu versión, abre la app una vez y la comprobación se repite.
+- Las notificaciones son solo para eventos (conectar, conectado, error) y se pueden deslizar para quitar de la barra en cualquier momento; no queda ningún aviso fijo de «automatización activa».
 
 ## Características ⭐
 
@@ -55,6 +56,7 @@ Inicia sesión en el portal Wi-Fi de la UCAB Guayana sin abrir un navegador. La 
 - Ejecución automática en segundo plano al conectarse a una red permitida.
 - Verificación real de internet con el estado de red validada de Android.
 - Mosaico de ajustes rápidos y resultado duradero sin datos sensibles.
+- Avisos de conexión descartables: sin notificación fija ni servicio permanente.
 
 ## Documentación 📖
 

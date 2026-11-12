@@ -3,6 +3,7 @@ package com.app.autologinucab.presentation
 import android.Manifest
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -26,6 +27,7 @@ import com.app.autologinucab.domain.model.Credentials
 import com.app.autologinucab.domain.model.LoginAttempt
 import com.app.autologinucab.domain.model.LoginResult
 import com.app.autologinucab.domain.model.LoginResultType
+import com.app.autologinucab.domain.model.LoginTrigger
 import com.app.autologinucab.presentation.ui.MainScreen
 import com.app.autologinucab.presentation.ui.MainScreenActions
 import com.app.autologinucab.presentation.ui.MainScreenState
@@ -34,7 +36,9 @@ import com.app.autologinucab.presentation.ui.NetworksScreenActions
 import com.app.autologinucab.presentation.ui.NetworksScreenState
 import com.app.autologinucab.presentation.ui.PermissionIssue
 import com.app.autologinucab.presentation.ui.theme.AutoLoginUCABTheme
-import com.app.autologinucab.service.AutoLoginService
+import com.app.autologinucab.service.AutomationTrigger
+import com.app.autologinucab.service.LoginJobScheduler
+import com.app.autologinucab.service.LoginNotifications
 import java.security.GeneralSecurityException
 import kotlinx.coroutines.delay
 
@@ -49,7 +53,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val container = (application as App).container
-        AutoLoginService.ensureRunning(this)
+        AutomationTrigger.register(this)
+        LoginNotifications.deleteLegacyChannel(this)
 
         setContent {
             AutoLoginUCABTheme {
@@ -140,6 +145,7 @@ private fun AutoLoginApp(container: AppContainer) {
             add(Manifest.permission.ACCESS_COARSE_LOCATION)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 add(Manifest.permission.NEARBY_WIFI_DEVICES)
+                add(Manifest.permission.POST_NOTIFICATIONS)
             }
         }.toTypedArray()
     }
@@ -148,6 +154,20 @@ private fun AutoLoginApp(container: AppContainer) {
         contract = ActivityResultContracts.RequestMultiplePermissions()
     ) {
         permissionIssue = permissionIssueOf(container)
+    }
+
+    // Android 13+ hides the connection notices until the user grants notifications at runtime.
+    val notificationsPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { }
+
+    LaunchedEffect(Unit) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            context.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) !=
+            PackageManager.PERMISSION_GRANTED
+        ) {
+            notificationsPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -179,7 +199,7 @@ private fun AutoLoginApp(container: AppContainer) {
         onSave = { saveCredentials() },
         onLogin = {
             saveCredentials {
-                AutoLoginService.startManual(context)
+                LoginJobScheduler.enqueue(context, LoginTrigger.MANUAL)
             }
         },
         onClearCredentials = {

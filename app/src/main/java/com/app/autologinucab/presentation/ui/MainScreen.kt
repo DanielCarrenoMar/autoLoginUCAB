@@ -68,8 +68,8 @@ fun MainScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             CredentialsCard(state = state, actions = actions)
-            PermissionCard(issue = state.permissionIssue, actions = actions)
             ConnectCard(state = state, actions = actions)
+            PermissionCard(issue = state.permissionIssue, actions = actions)
             ResultCard(attempt = state.lastAttempt)
             PortalCard()
         }
