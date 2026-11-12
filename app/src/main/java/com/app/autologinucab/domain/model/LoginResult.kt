@@ -10,6 +10,7 @@ enum class LoginResultType {
     NETWORK_ERROR,
     TIMEOUT,
     PERMISSION_REQUIRED,
+    LOCATION_DISABLED,
     SSID_NOT_ALLOWED,
     EMPTY_SSID_LIST
 }

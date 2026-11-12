@@ -1,4 +1,72 @@
 <resources>
     <string name="app_name">AutoLoginUCAB</string>
-</resources>
 
+    <!-- Main screen -->
+    <string name="credentials_title">Datos de acceso</string>
+    <string name="credentials_username">Usuario</string>
+    <string name="credentials_password">Contraseña</string>
+    <string name="credentials_password_keep_hint">Déjala vacía para conservar la guardada</string>
+    <string name="credentials_saved_as">Guardado como %1$s</string>
+    <string name="credentials_saved_password">Hay una contraseña cifrada guardada.</string>
+    <string name="credentials_no_saved_password">Todavía no hay contraseña guardada.</string>
+    <string name="credentials_required_for_login">Guarda tu usuario y contraseña para conectar.</string>
+    <string name="action_save">Guardar</string>
+    <string name="action_connect_now">Conectar ahora</string>
+    <string name="action_manage_networks">Redes permitidas</string>
+    <string name="action_clear_credentials">Borrar datos</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_back">Volver</string>
+    <string name="action_add">Agregar</string>
+    <string name="action_remove">Quitar</string>
+    <string name="action_grant_permission">Conceder permiso</string>
+    <string name="action_open_location_settings">Activar ubicación</string>
+
+    <string name="clear_title">¿Borrar credenciales?</string>
+    <string name="clear_message">Se eliminarán el usuario y la contraseña guardados en este teléfono.</string>
+
+    <string name="message_credentials_saved">Datos guardados y cifrados.</string>
+    <string name="message_credentials_cleared">Datos borrados.</string>
+    <string name="error_username_required">Escribe tu usuario.</string>
+    <string name="error_password_required">Escribe tu contraseña.</string>
+    <string name="error_credentials_storage">No se pudieron guardar los datos cifrados en este dispositivo.</string>
+
+    <string name="permission_title">Permiso necesario para la automatización</string>
+    <string name="permission_missing">Para leer el nombre del Wi-Fi y automatizar el inicio de sesión, la app necesita el permiso de ubicación (Android lo exige para el SSID).</string>
+    <string name="permission_location_disabled">La ubicación del teléfono está desactivada. Android no permite leer el nombre del Wi-Fi sin ella.</string>
+
+    <string name="result_title">Último intento</string>
+    <string name="result_never">Todavía no se ha ejecutado un intento.</string>
+
+    <string name="portal_title">Portal fijo</string>
+    <string name="portal_url">http://192.0.2.1/login.html</string>
+    <string name="portal_transport_warning">La petición viaja por HTTP sin cifrar dentro de la red del portal. La app guarda usuario y contraseña cifrados en el teléfono.</string>
+
+    <!-- Allowed networks screen -->
+    <string name="networks_title">Redes permitidas</string>
+    <string name="networks_explanation">La automatización se ejecuta al conectarte a una de estas redes. La lista se guarda en el teléfono.</string>
+    <string name="networks_add_label">SSID del Wi-Fi</string>
+    <string name="networks_add_error">Escribe un SSID nuevo; no se permiten vacíos ni duplicados.</string>
+    <string name="networks_empty">No hay redes permitidas. La automatización no se ejecutará hasta que agregues una.</string>
+
+    <!-- Background service -->
+    <string name="service_channel_name">Automatización de inicio de sesión</string>
+    <string name="service_channel_description">Mantiene la automatización activa al conectarte a tus redes permitidas.</string>
+    <string name="service_notification_title">AutoLogin UCAB</string>
+    <string name="service_notification_idle">Automatización activa</string>
+    <string name="service_notification_running">Conectando…</string>
+
+    <!-- Login results -->
+    <string name="login_result_running">Conectando…</string>
+    <string name="login_result_success">Conectado: internet validado.</string>
+    <string name="login_result_no_internet">El portal aceptó la petición, pero Android todavía no valida internet.</string>
+    <string name="login_result_missing_credentials">Faltan el usuario o la contraseña.</string>
+    <string name="login_result_credentials_unavailable">No se pudieron leer las credenciales cifradas. Vuelve a guardarlas.</string>
+    <string name="login_result_http_error">El portal respondió con error HTTP %1$d.</string>
+    <string name="login_result_http_error_unknown">El portal respondió con un error HTTP.</string>
+    <string name="login_result_network_error">No se pudo conectar con el portal.</string>
+    <string name="login_result_timeout">El portal no respondió a tiempo.</string>
+    <string name="login_result_permission_required">Falta el permiso de ubicación para leer el SSID.</string>
+    <string name="login_result_location_disabled">Activa la ubicación para que Android permita leer el SSID.</string>
+    <string name="login_result_ssid_not_allowed">La red actual no está en la lista de redes permitidas.</string>
+    <string name="login_result_empty_ssid_list">La lista de redes permitidas está vacía.</string>
+</resources>
