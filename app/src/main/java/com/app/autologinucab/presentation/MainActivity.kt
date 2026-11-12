@@ -78,7 +78,7 @@ private fun AutoLoginApp(container: AppContainer) {
     var permissionIssue by remember { mutableStateOf(permissionIssueOf(container)) }
 
     fun readStoredCredentials(): Credentials? = try {
-        container.credentialsRepository.get()
+        container.getCredentialsUseCase()
     } catch (_: GeneralSecurityException) {
         null
     } catch (_: IllegalArgumentException) {
@@ -112,7 +112,7 @@ private fun AutoLoginApp(container: AppContainer) {
         val finalPassword = typedPassword.ifBlank { stored?.password.orEmpty() }
 
         try {
-            container.credentialsRepository.save(
+            container.saveCredentialsUseCase(
                 Credentials(
                     username = trimmedUsername,
                     password = finalPassword,
@@ -183,7 +183,7 @@ private fun AutoLoginApp(container: AppContainer) {
             }
         },
         onClearCredentials = {
-            container.credentialsRepository.clear()
+            container.clearCredentialsUseCase()
             username = ""
             password = ""
             savedUsername = null

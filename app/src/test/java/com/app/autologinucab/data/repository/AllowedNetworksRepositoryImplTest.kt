@@ -4,6 +4,7 @@ import com.app.autologinucab.domain.model.SsidRules
 import com.app.autologinucab.domain.repository.SsidSettingsStore
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -58,7 +59,7 @@ class AllowedNetworksRepositoryImplTest {
     fun addRejectsBlankInput() {
         assertFalse(repository.add("   "))
         assertFalse(repository.add("\"\""))
-        assertEquals(null, store.saved)
+        assertNull(store.saved)
     }
 
     @Test

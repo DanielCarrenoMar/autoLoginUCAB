@@ -35,11 +35,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".presentation.WebLoginActivity"
-            android:exported="false"
-            android:launchMode="singleTask" />
-
         <service
             android:name=".service.AutoLoginService"
             android:exported="false"

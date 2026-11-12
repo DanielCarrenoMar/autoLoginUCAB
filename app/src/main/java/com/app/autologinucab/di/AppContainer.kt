@@ -14,9 +14,12 @@ import com.app.autologinucab.domain.repository.CredentialsRepository
 import com.app.autologinucab.domain.repository.LoginStatusRepository
 import com.app.autologinucab.domain.repository.WifiStatusProvider
 import com.app.autologinucab.domain.usecase.AutomaticLoginGate
+import com.app.autologinucab.domain.usecase.ClearCredentialsUseCase
+import com.app.autologinucab.domain.usecase.GetCredentialsUseCase
 import com.app.autologinucab.domain.usecase.LoginCoordinator
 import com.app.autologinucab.domain.usecase.LoginExecutor
 import com.app.autologinucab.domain.usecase.LoginSingleFlight
+import com.app.autologinucab.domain.usecase.SaveCredentialsUseCase
 
 /**
  * Manual dependency graph shared by the activity, the tile and the background service.
@@ -28,6 +31,10 @@ class AppContainer(context: Context) {
 
     val credentialsRepository: CredentialsRepository =
         CredentialsRepositoryImpl(appContext)
+
+    val getCredentialsUseCase = GetCredentialsUseCase(credentialsRepository)
+    val saveCredentialsUseCase = SaveCredentialsUseCase(credentialsRepository)
+    val clearCredentialsUseCase = ClearCredentialsUseCase(credentialsRepository)
 
     val loginStatusRepository: LoginStatusRepository =
         SharedPreferencesLoginStatusRepository(appContext)
