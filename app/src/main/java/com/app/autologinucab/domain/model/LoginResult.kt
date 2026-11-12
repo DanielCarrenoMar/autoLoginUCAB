@@ -12,7 +12,8 @@ enum class LoginResultType {
     PERMISSION_REQUIRED,
     LOCATION_DISABLED,
     SSID_NOT_ALLOWED,
-    EMPTY_SSID_LIST
+    EMPTY_SSID_LIST,
+    INTERRUPTED
 }
 
 data class LoginResult(

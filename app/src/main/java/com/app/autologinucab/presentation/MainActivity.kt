@@ -1,173 +1,261 @@
 package com.app.autologinucab.presentation
 
-import android.os.Bundle
+import android.Manifest
+import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.os.Build
+import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.Row
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
-import com.app.autologinucab.data.repository.CredentialsRepositoryImpl
+import com.app.autologinucab.App
+import com.app.autologinucab.R
+import com.app.autologinucab.di.AppContainer
 import com.app.autologinucab.domain.model.Credentials
-import com.app.autologinucab.domain.usecase.ClearCredentialsUseCase
-import com.app.autologinucab.domain.usecase.GetCredentialsUseCase
-import com.app.autologinucab.domain.usecase.SaveCredentialsUseCase
+import com.app.autologinucab.domain.model.LoginAttempt
+import com.app.autologinucab.domain.model.LoginResult
+import com.app.autologinucab.domain.model.LoginResultType
+import com.app.autologinucab.presentation.ui.MainScreen
+import com.app.autologinucab.presentation.ui.MainScreenActions
+import com.app.autologinucab.presentation.ui.MainScreenState
+import com.app.autologinucab.presentation.ui.NetworksScreen
+import com.app.autologinucab.presentation.ui.NetworksScreenActions
+import com.app.autologinucab.presentation.ui.NetworksScreenState
+import com.app.autologinucab.presentation.ui.PermissionIssue
 import com.app.autologinucab.presentation.ui.theme.AutoLoginUCABTheme
+import com.app.autologinucab.service.AutoLoginService
+import java.security.GeneralSecurityException
+import kotlinx.coroutines.delay
+
+private const val SCREEN_HOME = "home"
+private const val SCREEN_NETWORKS = "networks"
+private const val STATUS_REFRESH_MILLIS = 3_000L
+private const val STALE_RUNNING_MILLIS = 60_000L
 
 class MainActivity : ComponentActivity() {
 
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val repo = CredentialsRepositoryImpl(applicationContext)
-        val saveUseCase = SaveCredentialsUseCase(repo)
-        val getUseCase = GetCredentialsUseCase(repo)
-        val clearUseCase = ClearCredentialsUseCase(repo)
+        val container = (application as App).container
+        AutoLoginService.ensureRunning(this)
 
         setContent {
             AutoLoginUCABTheme {
-                var username by remember { mutableStateOf("") }
-                var password by remember { mutableStateOf("") }
-                var url by remember { mutableStateOf("") }
-                var status by remember { mutableStateOf("") }
-
-                // Valores guardados (para mostrar)
-                var savedUrl by remember { mutableStateOf<String?>(null) }
-                var savedUser by remember { mutableStateOf<String?>(null) }
-                var savedPassMasked by remember { mutableStateOf<String?>(null) }
-
-                fun refreshSaved() {
-                    val c = getUseCase()
-                    savedUrl = c?.url
-                    savedUser = c?.username
-                    savedPassMasked = c?.password?.takeIf { it.isNotEmpty() }?.let { "*".repeat(it.length.coerceAtMost(16)) }
-                }
-
-                // Cargar al inicio
-                androidx.compose.runtime.LaunchedEffect(Unit) {
-                    refreshSaved()
-                }
-
-                val context = LocalContext.current
-
-                Scaffold(
-                    topBar = { TopAppBar(title = { Text("AutoLoginUCAB") }) }
-                ) { padding: PaddingValues ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(padding)
-                            .padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text("Guardado:")
-                        Text("Link: ${savedUrl ?: "(vacío)"}")
-                        Text("Usuario: ${savedUser ?: "(vacío)"}")
-                        Text("Contraseña: ${savedPassMasked ?: "(vacío)"}")
-
-                        Row {
-                            TextButton(onClick = {
-                                clearUseCase()
-                                url = ""
-                                username = ""
-                                password = ""
-                                refreshSaved()
-                                status = "Datos borrados"
-                            }) { Text("Borrar", color = MaterialTheme.colorScheme.secondary) }
-                        }
-
-                        OutlinedTextField(
-                            value = url,
-                            onValueChange = { url = it },
-                            label = { Text("URL del formulario") },
-                            singleLine = true
-                        )
-                        OutlinedTextField(
-                            value = username,
-                            onValueChange = { username = it },
-                            label = { Text("Usuario") },
-                            singleLine = true
-                        )
-                        OutlinedTextField(
-                            value = password,
-                            onValueChange = { password = it },
-                            label = { Text("Contraseña") },
-                            singleLine = true
-                        )
-
-                        Row (modifier = Modifier.padding(top = 8.dp), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                            Button(onClick = {
-                                // Lanzar la actividad WebLoginActivity
-                                context.startActivity(Intent(context, WebLoginActivity::class.java))
-                            }) {
-                                Text("Ejecutar")
-                            }
-
-                            Button(onClick = {
-                                val existing = getUseCase()
-
-                                val newUrl = url.trim()
-                                val newUser = username.trim()
-                                val newPass = password
-
-                                // Solo reemplazar valores si el input NO está vacío
-                                val finalUrl = newUrl.ifBlank { (existing?.url ?: "") }
-                                val finalUser = newUser.ifBlank { (existing?.username ?: "") }
-                                val finalPass = newPass.ifBlank { (existing?.password ?: "") }
-
-                                // Si no hay nada nuevo escrito, no hacemos escritura innecesaria
-                                if (newUrl.isBlank() && newUser.isBlank() && newPass.isBlank()) {
-                                    status = "No hay cambios para guardar (todos los inputs están vacíos)"
-                                    return@Button
-                                }
-
-                                saveUseCase(
-                                    Credentials(
-                                        username = finalUser,
-                                        password = finalPass,
-                                        url = finalUrl
-                                    )
-                                )
-                                refreshSaved()
-                                status = "Guardado"
-
-                                // Limpiar inputs después de guardar
-                                url = ""
-                                username = ""
-                                password = ""
-                            }) {
-                                Text("Guardar")
-                            }
-
-                        }
-
-                        if (status.isNotBlank()) Text(status)
-
-                        Text("Nota: el Tile se habilita desde Editar mosaicos en Ajustes rápidos.")
-                    }
-                }
+                AutoLoginApp(container = container)
             }
         }
     }
+}
+
+@Composable
+private fun AutoLoginApp(container: AppContainer) {
+    val context = LocalContext.current
+
+    var screenName by rememberSaveable { mutableStateOf(SCREEN_HOME) }
+    var username by rememberSaveable { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var message by rememberSaveable { mutableStateOf<String?>(null) }
+    var savedUsername by rememberSaveable { mutableStateOf<String?>(null) }
+    var hasSavedPassword by rememberSaveable { mutableStateOf(false) }
+    var ssids by remember { mutableStateOf(container.allowedNetworksRepository.allowedSsids()) }
+    var newSsid by rememberSaveable { mutableStateOf("") }
+    var networksMessage by rememberSaveable { mutableStateOf<String?>(null) }
+    var lastAttempt by remember {
+        mutableStateOf<LoginAttempt?>(container.loginStatusRepository.current())
+    }
+    var permissionIssue by remember { mutableStateOf(permissionIssueOf(container)) }
+
+    fun readStoredCredentials(): Credentials? = try {
+        container.credentialsRepository.get()
+    } catch (_: GeneralSecurityException) {
+        null
+    } catch (_: IllegalArgumentException) {
+        null
+    }
+
+    fun loadStoredState(): Credentials? {
+        val stored = readStoredCredentials()
+        savedUsername = stored?.username?.takeIf { it.isNotBlank() }
+        hasSavedPassword = stored?.password?.isNotBlank() == true
+        if (username.isBlank() && stored != null) {
+            username = stored.username
+        }
+        return stored
+    }
+
+    fun saveCredentials(onSaved: () -> Unit = {}) {
+        val stored = readStoredCredentials()
+        val trimmedUsername = username.trim()
+        val typedPassword = password
+
+        if (trimmedUsername.isBlank()) {
+            message = context.getString(R.string.error_username_required)
+            return
+        }
+        if (typedPassword.isBlank() && stored?.password.isNullOrBlank()) {
+            message = context.getString(R.string.error_password_required)
+            return
+        }
+
+        val finalPassword = typedPassword.ifBlank { stored?.password.orEmpty() }
+
+        try {
+            container.credentialsRepository.save(
+                Credentials(
+                    username = trimmedUsername,
+                    password = finalPassword,
+                    url = stored?.url.orEmpty()
+                )
+            )
+        } catch (_: GeneralSecurityException) {
+            message = context.getString(R.string.error_credentials_storage)
+            return
+        } catch (_: IllegalArgumentException) {
+            message = context.getString(R.string.error_credentials_storage)
+            return
+        }
+
+        username = trimmedUsername
+        password = ""
+        message = context.getString(R.string.message_credentials_saved)
+        loadStoredState()
+        onSaved()
+    }
+
+    val requestedPermissions = remember {
+        buildList {
+            add(Manifest.permission.ACCESS_FINE_LOCATION)
+            add(Manifest.permission.ACCESS_COARSE_LOCATION)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                add(Manifest.permission.NEARBY_WIFI_DEVICES)
+            }
+        }.toTypedArray()
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) {
+        permissionIssue = permissionIssueOf(container)
+    }
+
+    LaunchedEffect(Unit) {
+        loadStoredState()
+    }
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            permissionIssue = permissionIssueOf(container)
+
+            val attempt = container.loginStatusRepository.current()
+            if (attempt != null &&
+                attempt.type == LoginResultType.RUNNING &&
+                System.currentTimeMillis() - attempt.timestamp > STALE_RUNNING_MILLIS
+            ) {
+                container.loginStatusRepository.record(LoginResult(LoginResultType.INTERRUPTED))
+            }
+            lastAttempt = container.loginStatusRepository.current()
+
+            delay(STATUS_REFRESH_MILLIS)
+        }
+    }
+
+    val busy = lastAttempt?.type == LoginResultType.RUNNING
+
+    val mainActions = MainScreenActions(
+        onUsernameChange = { username = it },
+        onPasswordChange = { password = it },
+        onSave = { saveCredentials() },
+        onLogin = {
+            saveCredentials {
+                AutoLoginService.startManual(context)
+            }
+        },
+        onClearCredentials = {
+            container.credentialsRepository.clear()
+            username = ""
+            password = ""
+            savedUsername = null
+            hasSavedPassword = false
+            message = context.getString(R.string.message_credentials_cleared)
+        },
+        onManageNetworks = {
+            ssids = container.allowedNetworksRepository.allowedSsids()
+            networksMessage = null
+            screenName = SCREEN_NETWORKS
+        },
+        onRequestPermission = {
+            permissionLauncher.launch(requestedPermissions)
+        },
+        onOpenLocationSettings = {
+            try {
+                context.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+            } catch (_: ActivityNotFoundException) {
+                message = context.getString(R.string.permission_location_disabled)
+            }
+        }
+    )
+
+    val networkActions = NetworksScreenActions(
+        onNewSsidChange = { newSsid = it },
+        onAdd = {
+            if (container.allowedNetworksRepository.add(newSsid)) {
+                newSsid = ""
+                networksMessage = null
+                ssids = container.allowedNetworksRepository.allowedSsids()
+            } else {
+                networksMessage = context.getString(R.string.networks_add_error)
+            }
+        },
+        onRemove = { ssid ->
+            container.allowedNetworksRepository.remove(ssid)
+            ssids = container.allowedNetworksRepository.allowedSsids()
+        },
+        onBack = { screenName = SCREEN_HOME }
+    )
+
+    if (screenName == SCREEN_NETWORKS) {
+        BackHandler {
+            screenName = SCREEN_HOME
+        }
+        NetworksScreen(
+            state = NetworksScreenState(
+                ssids = ssids,
+                newSsid = newSsid,
+                message = networksMessage
+            ),
+            actions = networkActions
+        )
+    } else {
+        MainScreen(
+            state = MainScreenState(
+                username = username,
+                password = password,
+                savedUsername = savedUsername,
+                hasSavedPassword = hasSavedPassword,
+                busy = busy,
+                permissionIssue = permissionIssue,
+                message = message,
+                lastAttempt = lastAttempt
+            ),
+            actions = mainActions
+        )
+    }
+}
+
+private fun permissionIssueOf(container: AppContainer): PermissionIssue = when {
+    !container.wifiStatusProvider.hasSsidPermission() -> PermissionIssue.MISSING_PERMISSION
+    !container.wifiStatusProvider.isLocationEnabled() -> PermissionIssue.LOCATION_DISABLED
+    else -> PermissionIssue.NONE
 }

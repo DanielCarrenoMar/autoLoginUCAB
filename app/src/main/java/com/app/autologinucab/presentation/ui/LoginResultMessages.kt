@@ -26,6 +26,7 @@ object LoginResultMessages {
         LoginResultType.LOCATION_DISABLED -> R.string.login_result_location_disabled
         LoginResultType.SSID_NOT_ALLOWED -> R.string.login_result_ssid_not_allowed
         LoginResultType.EMPTY_SSID_LIST -> R.string.login_result_empty_ssid_list
+        LoginResultType.INTERRUPTED -> R.string.login_result_interrupted
     }
 }
 

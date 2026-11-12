@@ -69,4 +69,5 @@
     <string name="login_result_location_disabled">Activa la ubicación para que Android permita leer el SSID.</string>
     <string name="login_result_ssid_not_allowed">La red actual no está en la lista de redes permitidas.</string>
     <string name="login_result_empty_ssid_list">La lista de redes permitidas está vacía.</string>
+    <string name="login_result_interrupted">El intento anterior se interrumpió. Vuelve a conectar.</string>
 </resources>

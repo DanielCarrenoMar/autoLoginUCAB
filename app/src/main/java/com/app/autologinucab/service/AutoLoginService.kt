@@ -20,6 +20,8 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.app.autologinucab.App
 import com.app.autologinucab.R
+import com.app.autologinucab.domain.model.LoginResult
+import com.app.autologinucab.domain.model.LoginResultType
 import com.app.autologinucab.domain.model.LoginTrigger
 import com.app.autologinucab.domain.model.SsidRules
 import com.app.autologinucab.domain.usecase.RepeatedConnectionGuard
@@ -67,6 +69,7 @@ class AutoLoginService : Service() {
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
+        clearStaleRunningStatus()
         updateNotificationFromStatus()
         registerWifiCallback()
     }
@@ -162,6 +165,17 @@ class AutoLoginService : Service() {
         startOrUpdateForeground(text)
     }
 
+    /**
+     * A process death during an attempt leaves RUNNING persisted forever, which would
+     * keep the UI busy and disabled. The service owns the attempt, so on a fresh
+     * instance the stale marker is replaced with an honest interrupted result.
+     */
+    private fun clearStaleRunningStatus() {
+        if (container.loginStatusRepository.current()?.type == LoginResultType.RUNNING) {
+            container.loginStatusRepository.record(LoginResult(LoginResultType.INTERRUPTED))
+        }
+    }
+
     private fun startOrUpdateForeground(text: String) {
         val notification = buildNotification(text)
 
@@ -229,7 +243,12 @@ class AutoLoginService : Service() {
 
         private fun startService(context: Context, action: String) {
             val intent = Intent(context, AutoLoginService::class.java).setAction(action)
-            ContextCompat.startForegroundService(context, intent)
+            try {
+                ContextCompat.startForegroundService(context, intent)
+            } catch (_: IllegalStateException) {
+                // The OS refused a background foreground-service start. The durable
+                // status and the in-app button remain available.
+            }
         }
     }
 }
