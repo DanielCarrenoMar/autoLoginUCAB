@@ -13,7 +13,9 @@ object SsidRules {
         "Estudiantes.Ingenierias",
         "Empleados.Ingenierias",
         "Empleados.Mod_AR_IV",
-        "Estudiantes.Mod_AR_IV"
+        "Estudiantes.Mod_AR_IV",
+        "Estudiantes.Bilioteca",
+        "Empleados.Bilioteca",
     )
 
     const val UNKNOWN_SSID = "<unknown ssid>"
