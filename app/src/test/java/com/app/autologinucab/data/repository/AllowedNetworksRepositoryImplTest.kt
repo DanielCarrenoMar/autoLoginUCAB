@@ -14,16 +14,11 @@ class AllowedNetworksRepositoryImplTest {
     private val repository = AllowedNetworksRepositoryImpl(store)
 
     @Test
-    fun firstUseSeedsExactlyTheFourDefaultNetworks() {
+    fun firstUseSeedsExactlyTheDefaultNetworks() {
         val ssids = repository.allowedSsids()
 
         assertEquals(
-            listOf(
-                "Estudiantes.Ingenierias",
-                "Empleados.Ingenierias",
-                "Empleados.Mod_AR_IV",
-                "Estudiantes.Mod_AR_IV"
-            ),
+            SsidRules.DEFAULT_SSIDS,
             ssids
         )
         assertEquals(ssids, store.saved)
@@ -67,11 +62,7 @@ class AllowedNetworksRepositoryImplTest {
         repository.remove("Empleados.Mod_AR_IV")
 
         assertEquals(
-            listOf(
-                "Estudiantes.Ingenierias",
-                "Empleados.Ingenierias",
-                "Estudiantes.Mod_AR_IV"
-            ),
+            SsidRules.DEFAULT_SSIDS - "Empleados.Mod_AR_IV",
             repository.allowedSsids()
         )
     }

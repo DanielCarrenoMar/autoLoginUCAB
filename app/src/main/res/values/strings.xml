@@ -39,7 +39,10 @@
 
     <string name="portal_title">Portal fijo</string>
     <string name="portal_url">http://192.0.2.1/login.html</string>
-    <string name="portal_transport_warning">La petición viaja por HTTP sin cifrar dentro de la red del portal. La app guarda usuario y contraseña cifrados en el teléfono.</string>
+    <string name="password_show">Mostrar contraseña</string>
+    <string name="password_hide">Ocultar contraseña</string>
+    <string name="badge_ucab_official">UCAB</string>
+    <string name="status_ready">Listo para conectar</string>
 
     <!-- Allowed networks screen -->
     <string name="networks_title">Redes permitidas</string>
